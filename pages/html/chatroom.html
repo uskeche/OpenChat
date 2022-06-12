@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenChat</title>
+    <link href="../../main.css" rel="stylesheet"/>
+    <link href="./chatroom.css" rel="stylesheet"/>
+</head>
+<body>
+    <div class="container" id="chatRoom">
+        <h2 class="chatRoomName">#AGALAR</h2>
+        <div class="card">
+            <main>
+                <!-- <div class="textBubbleContainer">
+                    <div class="textBubble received">
+                        <span class="senderOfText">Sezai Ufuk Oral</span>
+                        <span>WEĞH</span>
+                    </div>
+                </div>
+
+                <div class="textBubbleContainer">
+                    <div class="textBubble sent">
+                        WEĞH
+                    </div>
+                </div> -->
+                
+            </main>
+            <footer>
+                <input type="text" placeholder="Type something..." id="sendText"/>
+                <div class="sendButton__container">
+                    <div class="sendButton">
+                        >
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        var sendText = document.querySelector("#sendText")
+        const sendButton = document.querySelector(".sendButton");
+
+        sendButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (sendText.value) {
+            socket.emit('chat message', {message:sendText.value,owner:true});
+            sendText.value = '';
+            }
+        });
+
+        socket.on('chat message', function(msg) {
+        msg.owner ? sentMessageBuilder(msg.message) : receiveMessageBuilder(msg.message)
+        window.scrollTo(0, document.body.scrollHeight);
+        });
+    </script>
+    <script>
+        const sentMessageBuilder = (msg) => {
+            const container = document.createElement("div")
+            container.classList.add("textBubbleContainer")
+            const textBubble = document.createElement("div")
+            const span = document.createElement("span")
+            span.textContent = msg
+            textBubble.appendChild(span)
+            textBubble.classList.add("textBubble")
+            textBubble.classList.add("sent")
+            container.appendChild(textBubble)
+
+            document.querySelector('.card main').appendChild(container)
+        }
+
+        const receiveMessageBuilder = (msg) => {
+            const container = document.createElement("div")
+            container.classList.add("textBubbleContainer")
+            const textBubble = document.createElement("div")
+            textBubble.classList.add("textBubble")
+            textBubble.classList.add("received")
+            const senderNameContainer = document.createElement("span")
+            senderNameContainer.classList.add("senderOfText")
+            const senderName = "User"
+            senderNameContainer.textContent=senderName
+            textBubble.appendChild(senderNameContainer)
+            const span = document.createElement("span")
+            span.textContent = msg
+            textBubble.appendChild(span)
+            
+            container.appendChild(textBubble)
+
+            document.querySelector('.card main').appendChild(container)
+        }
+    </script>
+</body>
+</html>

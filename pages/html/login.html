@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenChat</title>
+    <link href="../../main.css" rel="stylesheet"/>
+    <link href="./login.css" rel="stylesheet"/>
+</head>
+<body class="preload" onload="(()=>changePreload())()">
+    <div class="container">
+        <div class="card">
+            <header>
+                <h4>
+                    Open<span>Chat</span>
+                </h4>
+            </header>
+            <div class="card__content">
+                <form method="GET" action="http://localhost:3000/chatroom">
+                    <input type="text" placeholder="Username" name="userName" autocomplete="off" required/>
+                    <input type="text" placeholder="Room" name="roomName" autocomplete="off" required/>
+                    <input type="submit" value="Login">
+                </form>
+            </div>
+        </div>
+        
+    </div>
+    <script>
+        const changePreload = (e) => {
+            const bodyItem = document.querySelector("body")
+            bodyItem.classList.remove("preload")
+        }
+    </script>
+   
+</body>
+</html>
