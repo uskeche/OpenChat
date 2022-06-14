@@ -1,41 +1,59 @@
 const express = require('express');
 const app = express();
-const http = require('http');
+//const http = require('http');
 const path = require('path');
+const bodyParser = require('body-parser')
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 
-const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
+const httpServer = require("http").createServer();
+const io = require("socket.io")(httpServer, {
+  cors: {
+    origin: "http://localhost:3001",
+    methods: ["GET", "POST"]
+  }
+});
 
-app.use(express.static(path.join(__dirname,'pages/css')));
+
+
+
 
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname,'pages/html/login.html'));
+  res.sendFile(path.join(__dirname,'pages/html/index.html'));
 });
-
-
-app.get('/chatroom', (req, res) => {
-
-  const userName = req.params;
-  console.log(userName)
-  res.sendFile(path.join(__dirname,'pages/html/chatroom.html'));
-});
-
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  
 
-  socket.on('chat message', (msg) => {
-    socket.emit('chat message',msg)
-    socket.broadcast.emit('chat message', {message:msg.message,owner:false});
+  socket.on('sendData', (data) => {
+    console.log(data)
+
+    socket.join(data.roomName)
+/////////////////////////////////////////////////////////////////////////
+    socket.on('sendMessage', (messageData) => {
+  
+      socket.emit('receiveMessage',messageData)
+
+      socket.broadcast.to(data.roomName).emit('receiveMessageBroadcast', {message:messageData.message,owner:false,otherUserName:messageData.userInfo.userName});
+    });
   });
 
+
+
+  
+
+
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log('a user disconnected\n');
   });
 });
 
-server.listen(3000, () => {
-  console.log('listening port:3000');
+
+
+
+
+httpServer.listen(3000, () => {
+  console.log('listening port:3000\n');
 });
 
