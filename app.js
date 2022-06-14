@@ -1,27 +1,17 @@
-const express = require('express');
+var express = require('express');
 const app = express();
-//const http = require('http');
-const path = require('path');
-const bodyParser = require('body-parser')
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
-
-const httpServer = require("http").createServer();
+const http = require('http');
+const httpServer = http.createServer(app);
 const io = require("socket.io")(httpServer, {
   cors: {
-    origin: "http://localhost:3001",
-    methods: ["GET", "POST"]
+    origin: '*',
+    methods: ["GET", "POST"],
   }
 });
 
 
 
 
-
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname,'pages/html/index.html'));
-});
 
 io.on('connection', (socket) => {
   
