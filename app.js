@@ -11,7 +11,9 @@ const io = require("socket.io")(httpServer, {
 
 
 
-
+app.get('/',(req,res)=>{
+    res.json({})
+})
 
 io.on('connection', (socket) => {
   
