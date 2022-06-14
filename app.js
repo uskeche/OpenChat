@@ -12,7 +12,7 @@ const io = require("socket.io")(httpServer, {
 
 
 app.get('/',(req,res)=>{
-    res.json({})
+    res.json({"data":"hello"})
 })
 
 io.on('connection', (socket) => {
